@@ -9,7 +9,10 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -25,7 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class dashboardclient extends AppCompatActivity {
 
     Button sigout;
-    TextView name;
+    TextView name,varific;
     FirebaseAuth mauth;
     FirebaseUser user;
     String uid;
@@ -41,10 +44,30 @@ public class dashboardclient extends AppCompatActivity {
         setContentView(R.layout.activity_dashboardclient);
         user = FirebaseAuth.getInstance().getCurrentUser();
         uid = user.getUid();
+        varific = findViewById(R.id.varify);
          userimg = findViewById(R.id.profile);
         mauth = FirebaseAuth.getInstance();
         sigout = findViewById(R.id.signout);
         name = findViewById(R.id.username);
+
+        FirebaseUser user = mauth.getCurrentUser();
+        if (user.isEmailVerified()){
+            varific.setText("");
+        }else{
+            varific.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Toast.makeText(dashboardclient.this,"Email Varification Sent ",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        }
+
+
         DatabaseReference databaseRef= FirebaseDatabase.getInstance().getReference();
 
 
@@ -136,6 +159,13 @@ public class dashboardclient extends AppCompatActivity {
 
     public void sendtoprof(View view) {
         Intent log = new Intent(dashboardclient.this, profile.class);
+        startActivity(log);
+        finish();
+
+    }
+
+    public void approvel(View view) {
+        Intent log = new Intent(dashboardclient.this, approval.class);
         startActivity(log);
         finish();
 

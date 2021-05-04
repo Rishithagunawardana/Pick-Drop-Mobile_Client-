@@ -35,7 +35,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:src="@drawable/ic_magnify"/>
-        <EditText
+
+        <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_toRightOf="@+id/ic_magnify"
@@ -46,8 +47,32 @@
             android:background="@null"
             android:hint="Enter Address,City or zip code"
             android:imeOptions="actionSearch"/>
-
-
     </RelativeLayout>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
 
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="81dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_gps"
+        android:id="@+id/gps"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/place_picker"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="81dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placepick"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/place_picker"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/place_info"
+        android:src="@drawable/info"/>
 </RelativeLayout>

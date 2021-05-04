@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent login = new Intent(MainActivity.this,loginactivity.class);
                 startActivity(login);
                 fileList();
+                finish();
             }
         },SPLSH_TIME_OUT);
     }

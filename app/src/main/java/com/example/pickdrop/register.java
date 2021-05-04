@@ -1,6 +1,9 @@
 package com.example.pickdrop;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,8 +17,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -23,6 +29,8 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class register extends AppCompatActivity {
 
@@ -80,9 +88,10 @@ public class register extends AppCompatActivity {
 
 
                         if (task.isSuccessful()) {
+
                             Toast.makeText(register.this, "User Created", Toast.LENGTH_SHORT).show();
-                             String user_id = fauth.getCurrentUser().getUid();
-                            DatabaseReference  current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
+                            String user_id = fauth.getCurrentUser().getUid();
+                            DatabaseReference current_user_db = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id);
 
 
                             String nme  = name.getText().toString();
@@ -95,8 +104,17 @@ public class register extends AppCompatActivity {
                             newPost.put("Password",malpass);
 
                             current_user_db.setValue(newPost);
-                            final Intent start = new Intent(register.this,loginactivity.class);
-                            startActivity(start);
+                            current_user_db.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    notification();
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                         }
 
@@ -109,6 +127,24 @@ public class register extends AppCompatActivity {
                 });
 
             }
+            private void notification() {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    NotificationChannel channel = new NotificationChannel("n","n", NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager manager = getSystemService(NotificationManager.class);
+                    manager.createNotificationChannel(channel);
+
+                }
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(register.this,"n")
+                        .setContentText("Pick & Drop")
+                        .setSmallIcon(R.drawable.logonew)
+                        .setAutoCancel(true)
+                        .setContentText("thanks for using Pick and Drop !");
+                NotificationManagerCompat managerCompat =   NotificationManagerCompat.from(register.this);
+                managerCompat.notify(999,builder.build());
+            }
+
+
         });
     }
 
